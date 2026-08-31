@@ -1,0 +1,6 @@
+attack_type,n_samples,auroc,auprc,f1,precision,recall,fpr
+BOT,2,1.0,1.0,1.0,1.0,1.0,0.0
+DDOS,4,1.0,1.0,1.0,1.0,1.0,0.0
+FTP-PATATOR,2,1.0,1.0,1.0,1.0,1.0,0.0
+PORTSCAN,5,1.0,1.0,1.0,1.0,1.0,0.0
+SSH-PATATOR,3,1.0,1.0,1.0,1.0,1.0,0.0

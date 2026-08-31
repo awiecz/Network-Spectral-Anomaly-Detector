@@ -1,0 +1,5 @@
+config,feature_type,model,auroc,auprc,f1,precision,recall,fpr,fnr,threshold,threshold_method
+spectral_ecod,spectral,ecod,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.8458648916240511,f1
+spectral_if,spectral,isolation_forest,0.9736842105263158,0.9411764705882353,0.9696969696969697,0.9411764705882353,1.0,0.05263157894736842,0.0,1.0,f1
+raw_ecod,raw_flow,ecod,0.9967105263157894,0.9963235294117647,0.9333333333333333,1.0,0.875,0.0,0.125,0.9840325188597223,f1
+raw_if,raw_flow,isolation_forest,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,f1

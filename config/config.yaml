@@ -1,0 +1,93 @@
+data:
+  cicids_path: "data/raw/cicids2017"
+  unsw_path: "data/raw/unsw_nb15"
+  sample_path: "data/sample"
+  processed_path: "data/processed"
+  train_day: "Monday"  # CICIDS2017 train day (benign only)
+
+spectral:
+  bin_size_seconds: 1          # Time bin resolution
+  window_size: 64              # FFT window size (power of 2)
+  overlap: 32                  # 50% overlap for finer temporal resolution
+  window_function: "hann"      # Spectral leakage reduction
+  rolloff_percentages: [0.85, 0.95]
+  energy_bands: 3              # Number of frequency bands (low/mid/high)
+  delta_features: true         # Per-channel delta mean/std within each window
+  log_transform_channels:      # Compress dynamic range before FFT
+    - "total_bytes"
+    - "total_packets"
+  input_series:
+    - "total_bytes"
+    - "total_packets"
+    - "mean_duration"
+  multi_scale:
+    enabled: true              # Concatenate fast (64s) + slow (256s) branches
+    slow_window_size: 256
+    slow_overlap: 0
+
+models:
+  vae:
+    encoder_dims: [128, 64]
+    latent_dim: 16
+    decoder_dims: [64, 128]
+    beta: 1.0
+    beta_warmup_epochs: 10
+    learning_rate: 0.001
+    batch_size: 256
+    epochs: 40
+    dropout: 0.2
+    early_stopping_patience: 5
+  isolation_forest:
+    n_estimators: 200
+    max_samples: 512
+    max_features: 1.0
+    contamination: "auto"
+    n_jobs: -1
+    random_state: 42
+  ecod:
+    contamination: 0.1
+  copod:
+    contamination: 0.1
+  hbos:
+    contamination: 0.1
+    n_bins: 10
+  deep_svdd:
+    hidden_dim: 64
+    latent_dim: 32
+    epochs: 50
+    pretrain_epochs: 50
+    batch_size: 256
+    contamination: 0.1
+  flow_ecod:
+    contamination: 0.1
+    fusion_weight: 0.3         # weight for flow-level branch in final score
+    aggregation: "max"         # max or mean when pooling flows to windows
+    percentile_low: 5
+    percentile_high: 95
+  ensemble:
+    mode: "tuned"              # tuned | ecod_only | full
+    # Tuned on validation (tune.py). Deep SVDD excluded (weight 0).
+    weights:
+      vae: 0.0
+      isolation_forest: 0.3
+      ecod: 0.7
+      copod: 0.0
+      hbos: 0.0
+      deep_svdd: 0.0
+
+evaluation:
+  threshold_methods: ["f1_optimal", "youden_j", "fpr_0.05", "fpr_0.10"]
+  fpr_targets: [0.05, 0.10]
+  default_threshold_method: "f1_optimal"
+  auroc_target: 0.90
+  auprc_target: 0.80
+  eval_days: ["Friday"]        # CICIDS2017 test days (Friday = DDoS + PortScan)
+  window_label_rule: "majority"
+  benign_test_frac: 0.30
+  dual_eval: true              # Also report metrics under the 'any' label rule
+
+visualization:
+  figure_dir: "results/figures"
+  dpi: 150
+  style: "seaborn-v0_8-whitegrid"
+  colormap: "tab10"

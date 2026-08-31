@@ -1,0 +1,5 @@
+model,threshold_method,auroc,auprc,f1,precision,recall,fpr,fnr,threshold
+ensemble,f1_optimal,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.8843986687180383
+ensemble,youden_j,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.8843986687180383
+ensemble,fpr_0.05,1.0,1.0,0.9333333333333333,1.0,0.875,0.0,0.125,1.0
+ensemble,fpr_0.10,1.0,1.0,0.9333333333333333,1.0,0.875,0.0,0.125,0.9944021651245261
